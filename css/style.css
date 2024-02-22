@@ -1,0 +1,109 @@
+    body {
+    justify-content: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    margin: 0;
+    padding: 0;
+    background-color: #000000; /* Fondo oscuro */
+    color: white; /* Color del texto */
+   
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    box-shadow: 0 2px 10px rgb(13, 196, 237);
+}
+
+form {
+    width: 300px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.1); /* Luminosidad del formulario */
+    box-shadow: 0 3px 120px rgb(93, 16, 121); /* Sombra suave */
+    margin: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 16px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+h2 {
+    text-align: center;
+}
+
+/* Estilos adicionales para la página de inicio */
+.container-home {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.container-home h2 {
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    box-shadow: 0 2px 10px white;
+
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  
+  justify-content: center;
+  align-items: center;
+
+}
+
+
+input, select {
+    justify-content: center;
+  align-items: center;
+
+
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
