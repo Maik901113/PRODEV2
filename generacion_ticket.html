@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./css/style.css">
   <title>Generación de Ticket</title>
-
 </head>
 <body>
   <img src="/IMG/LOGO P.png" alt="LOGO" width="150">
 
   <h2>Generación de Ticket</h2>
   <div class="container">
-
     <form id="ticketForm">
         <label for="serialMaquina">Serial de la Máquina:</label>
         <input type="text" id="serialMaquina" name="serialMaquina" required>
@@ -22,10 +20,12 @@
 
         <label for="numeroTicket">Número de Ticket (10 dígitos):</label>
         <input type="text" id="numeroTicket" name="numeroTicket" readonly>
-
+        
         <button type="button" onclick="generarTicket()">Generar Ticket</button>
-  </form>
+        <button type="button" onclick="continuarAMantenimiento()">Continuar</button>
+    </form>
 
-  <script src="./scripts.js"></script>
+    <script src="./scripts/generar_ticket.js"></script>
+  </div>
 </body>
 </html>

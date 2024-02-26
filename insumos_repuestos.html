@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/style.css">
+  <title>Insumos y Repuestos</title>
+</head>
+<body>
+  <h2>Insumos y Repuestos Utilizados</h2>
+  <div class="container">
+    <form id="insumosRepuestosForm">
+      <p>Número de Ticket: <span id="numeroTicket"></span></p>
+
+      <label for="nombreInsumo">Nombre del Insumo o Repuesto:</label>
+      <input type="text" id="nombreInsumo" name="nombreInsumo" required>
+
+      <label for="cantidad">Cantidad:</label>
+      <input type="number" id="cantidad" name="cantidad" min="1" required>
+
+      <label for="descripcion">Descripción:</label>
+      <textarea id="descripcion" name="descripcion" rows="4"></textarea>
+
+      <button type="button" onclick="agregarInsumoRepuesto()">Agregar Insumo o Repuesto</button>
+      <button type="button" onclick="guardarYContinuar()">Guardar y Continuar</button>
+    </form>
+
+    <div id="resumenInsumosRepuestos">
+      <form id="listaResumen">
+      <h3>Resumen</h3>
+      <ul id="listaResumen"></ul>
+    </form>
+    </div>
+  </div>
+
+  <script src="./scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/style.css">
+  <title>Mantenimiento</title>
+</head>
+<body>
+  <img src="/IMG/LOGO P.png" alt="LOGO" width="150">
+
+  <h2>Mantenimiento</h2>
+  <div class="container" id="mantenimientoContainer">
+        <form>
+
+
+
+            <p>Número de Ticket: <span id="numeroTicket"></span></p>
+
+            <!-- Agrega los campos correspondientes al mantenimiento dentro de este div -->
+            <div id="mantenimientoForm">
+                <label for="descripcionMantenimiento">Descripción del Mantenimiento:</label>
+                <textarea id="descripcionMantenimiento" name="descripcionMantenimiento" rows="4" required></textarea>
+
+                <!-- Otros campos para el mantenimiento -->
+
+                <button type="button" onclick="finalizarMantenimiento()">Finalizar Mantenimiento</button>
+                <button type="button" onclick="irAInsumosRepuestos()">Insumos y Repuestos</button>
+            </div>
+        </form>    
+    </div>
+
+  <script src="./scripts.js">
+    obtenerNumeroTicket();
+  </script>
+</body>
+</html>
+

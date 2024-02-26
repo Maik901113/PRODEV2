@@ -54,7 +54,7 @@ function register() {
 }
 
 function validateFields(firstName, lastName, email, phoneNumber, username, password, rol) {
-  // Puedes agregar tu lógica de validación aquí según tus requisitos
+ 
   // Ejemplo de validación simple: todos los campos deben estar llenos
   return firstName !== '' && lastName !== '' && email !== '' && phoneNumber !== '' && username !== '' && password !== '' && rol !== '';
 }
@@ -82,7 +82,7 @@ function validarFormulario() {
 
   // Si todas las validaciones pasan, el formulario se enviará
   // Redirigir a la página de diagnóstico inicial
-  window.location.href = "diagnostico.html";
+  window.location.href = "/diagnostico.html";
   return true;
 }
 
@@ -90,16 +90,19 @@ function enviarFormulario() {
   // Llamar a la función validarFormulario antes de redirigir
   if (validarFormulario()) {
         alert("Formulario enviado correctamente");
-      // Redirigir a la página de diagnóstico 
-      window.location.href = "historial_maquina.html";
+      // Redirigir a la página de historial maquina 
+      window.location.href = "/diagnostico.html";
   }
 }
 
 function redirectToDiagnostico() {
   // Redirigir a la página de diagnóstico
-  window.location.href = "/historial_maquina.html";
+  window.location.href = "/diagnostico.html";
 }
-
+function verHistorial1() {
+  // Redirige a la página de historial_maquina.html
+  window.location.href = "historial_maquina.html";
+}
 
 
 var historialData = [];
@@ -166,7 +169,6 @@ function aprobar() {
     // Redirigir a la página de generación de ticket
     window.location.href = "generacion_ticket.html";
 }
-  
 // Variables para almacenar el estado del contador de tickets y serial de máquina
 var contadorTickets = 1; // Iniciar en 1 para el primer ticket
 var serialMaquinaActual = '';
@@ -185,8 +187,11 @@ function generarTicket() {
   // Generar el número de ticket consecutivo de 10 dígitos
   var numeroTicket = pad(contadorTickets, 10);
 
+  // Guardar el número de ticket en sessionStorage
+  sessionStorage.setItem('numeroTicket', numeroTicket);
+
   // Obtener el serial de la máquina actual 
-    var serialMaquina = obtenerSerialMaquina();
+  var serialMaquina = obtenerSerialMaquina();
 
   // Mostrar los valores en el formulario
   document.getElementById('serialMaquina').value = serialMaquina;
@@ -196,10 +201,10 @@ function generarTicket() {
   contadorTickets++;
 }
 
-// Función para obtener el serial de la máquina (simulado, puedes ajustarlo según tus necesidades)
+// Función para obtener el serial de la máquina
 function obtenerSerialMaquina() {
-
-  return serialMaquinaActual;
+  // Implementa la lógica para obtener el serial de la máquina (puede ser un valor estático por ahora)
+  return 'EjemploSerial123';
 }
 
 // Función para rellenar con ceros a la izquierda hasta alcanzar la longitud deseada
@@ -209,6 +214,115 @@ function pad(num, length) {
     str = '0' + str;
   }
   return str;
+}
+
+// Función para redirigir a la página de mantenimiento
+function continuarAMantenimiento() {
+  // Redirigir a la página de mantenimiento
+  window.location.href = "mantenimiento.html";
+}
+
+//mantenimiento//
+document.addEventListener('DOMContentLoaded', function () {
+  // Obtener el número de ticket de sessionStorage
+  var numeroTicket = sessionStorage.getItem('numeroTicket');
+
+  // Mostrar el número de ticket en la página de mantenimiento
+  document.getElementById('numeroTicket').innerText = numeroTicket;
+});
+
+// Función para finalizar el mantenimiento
+function finalizarMantenimiento() {
+  // Obtener la descripción del mantenimiento
+  var descripcionMantenimiento = document.getElementById('descripcionMantenimiento').value;
+
+  // Validar que la descripción del mantenimiento esté completa
+  if (!descripcionMantenimiento) {
+    alert('Por favor, complete la descripción del mantenimiento.');
+    return;
+  }
+
+  // Aquí puedes realizar acciones adicionales con la información del mantenimiento
+
+  // Ejemplo: Redirigir a otra página (puedes ajustar según tu lógica)
+  window.location.href = "otraPagina.html";
+}
+
+// Función para ir a la página de Insumos y Repuestos
+function irAInsumosRepuestos() {
+  // Redirigir a la página de Insumos y Repuestos
+  window.location.href = "/insumos_repuestos.html";
+}
+function obtenerNumeroTicket() {
+  var urlParams = new URLSearchParams(window.location.search);
+  var numeroTicket = urlParams.get('numeroTicket');
+  // Mostrar el número de ticket en la página de mantenimiento
+  document.getElementById('numeroTicket').innerText = numeroTicket;
+}
+// insumo y repuestos 
+document.addEventListener('DOMContentLoaded', function () {
+  // Obtener el número de ticket de sessionStorage
+  var numeroTicket = sessionStorage.getItem('numeroTicket');
+
+  // Mostrar el número de ticket en la página de Insumos y Repuestos
+  document.getElementById('numeroTicket').innerText = numeroTicket;
+});
+
+// Variables para almacenar la lista de insumos y repuestos
+var listaInsumosRepuestos = [];
+
+// Función para agregar insumo o repuesto
+function agregarInsumoRepuesto() {
+  var nombreInsumo = document.getElementById('nombreInsumo').value;
+  var cantidad = document.getElementById('cantidad').value;
+  var descripcion = document.getElementById('descripcion').value;
+
+  // Validar que los campos estén completos
+  if (!nombreInsumo || !cantidad || isNaN(cantidad) || cantidad <= 0) {
+    alert('Por favor, complete todos los campos correctamente.');
+    return;
+  }
+
+  // Crear un objeto con la información del insumo o repuesto
+  var insumoRepuesto = {
+    nombre: nombreInsumo,
+    cantidad: cantidad,
+    descripcion: descripcion
+  };
+
+  // Agregar el objeto a la lista
+  listaInsumosRepuestos.push(insumoRepuesto);
+
+  // Actualizar la lista de resumen
+  actualizarListaResumen();
+
+  // Limpiar los campos del formulario
+  document.getElementById('nombreInsumo').value = '';
+  document.getElementById('cantidad').value = '';
+  document.getElementById('descripcion').value = '';
+}
+
+// Función para actualizar la lista de resumen
+function actualizarListaResumen() {
+  var listaResumen = document.getElementById('listaResumen');
+  listaResumen.innerHTML = ''; // Limpiar la lista
+
+  // Recorrer la lista de insumos y repuestos y agregar elementos a la lista de resumen
+  for (var i = 0; i < listaInsumosRepuestos.length; i++) {
+    var item = document.createElement('li');
+    item.textContent = listaInsumosRepuestos[i].nombre;
+    listaResumen.appendChild(item);
+  }
+}
+
+// Función para guardar y continuar
+function guardarYContinuar() {
+  // Implementa la lógica para guardar la información y redirigir a la página de Cerrar Ticket
+  // Puedes utilizar window.location.href para redirigir a "cerrar_ticket.html"
+  // Asegúrate de almacenar los datos necesarios antes de redirigir
+  // Por ejemplo, puedes almacenar la listaInsumosRepuestos en sessionStorage antes de redirigir
+  sessionStorage.setItem('listaInsumosRepuestos', JSON.stringify(listaInsumosRepuestos));
+  window.location.href = "cerrar_ticket.html";
 }
 
 
