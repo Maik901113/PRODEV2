@@ -326,7 +326,25 @@ function guardarYContinuar() {
 }
 
 
-  
+// cerrar ticket
+document.addEventListener('DOMContentLoaded', function () {
+  // Obtener el número de ticket de sessionStorage
+  var numeroTicket = sessionStorage.getItem('numeroTicket');
 
+  // Mostrar el número de ticket en la página de cerrar ticket
+  document.getElementById('numeroTicket').innerText = numeroTicket;
+});
 
+// Función para cerrar el ticket
+function cerrarTicket() {
+  // Aquí puedes agregar la lógica para cerrar el ticket
+  // Puedes hacer una solicitud al backend para enviar un correo o realizar otras acciones necesarias
+  alert('Ticket cerrado correctamente.');
+}
 
+// Función para enviar una alerta
+function enviarAlerta() {
+  // Aquí puedes agregar la lógica para enviar una alerta
+  // Puedes hacer una solicitud al backend para enviar un correo o realizar otras acciones necesarias
+  alert('Alerta enviada correctamente.');
+}
