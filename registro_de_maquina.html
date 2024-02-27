@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/style.css">
+  <title>Formulario de Mantenimiento</title>
+</head>
+<body>
+  <img src="/IMG/LOGO P.png" alt="LOGO" width="150">
+
+  <h2>Formulario de Mantenimiento</h2>
+  <div class="container">
+    <form id="mantenimientoForm" onsubmit="return validarFormulario()">
+      <label for="nombreMaquina">Nombre de Máquina:</label>
+      <input type="text" id="nombreMaquina" name="nombreMaquina" required>
+
+      <label for="marca">Marca:</label>
+      <input type="text" id="marca" name="marca" required>
+
+      <label for="serial">Serial:</label>
+      <input type="text" id="serial" name="serial" required>
+
+      <label for="tipoMaquina">Tipo de Máquina:</label>
+      <input type="text" id="tipoMaquina" name="tipoMaquina" required>
+
+      <label for="descripcion">Descripción:</label>
+      <textarea id="descripcion" name="descripcion" rows="4" required></textarea>
+
+      <label for="fechaIngreso">Fecha de Ingreso:</label>
+      <input type="date" id="fechaIngreso" name="fechaIngreso" required>
+
+      <label for="tipoMantenimiento">Tipo de Mantenimiento:</label>
+      <select id="tipoMantenimiento" name="tipoMantenimiento" required>
+        <option value="preventivo">Preventivo</option>
+        <option value="correctivo">Correctivo</option>
+      </select>
+
+      <label for="estadoMantenimiento">Estado de Mantenimiento:</label>
+      <input type="text" id="estadoMantenimiento" name="estadoMantenimiento" required>
+
+      <button type="button" onclick="enviarFormulario()">Enviar</button>
+    </form>
+  </div>
+  <script src="/scripts.js"></script>
+</body>
+</html>
