@@ -338,8 +338,10 @@ document.addEventListener('DOMContentLoaded', function () {
 // Función para cerrar el ticket
 function cerrarTicket() {
   // Aquí puedes agregar la lógica para cerrar el ticket
+
   // Puedes hacer una solicitud al backend para enviar un correo o realizar otras acciones necesarias
-  alert('Ticket cerrado correctamente.');
+  alert('Ticket cerrado correctamente.')
+  window.location.href="finalizacion.html";
 }
 
 // Función para enviar una alerta
