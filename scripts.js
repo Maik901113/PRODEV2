@@ -245,7 +245,7 @@ function finalizarMantenimiento() {
   // Aquí puedes realizar acciones adicionales con la información del mantenimiento
 
   // Ejemplo: Redirigir a otra página (puedes ajustar según tu lógica)
-  window.location.href = "otraPagina.html";
+  window.location.href = "cerrar_ticket.html";
 }
 
 // Función para ir a la página de Insumos y Repuestos
