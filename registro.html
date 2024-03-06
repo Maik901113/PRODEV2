@@ -4,26 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro de Usuario</title>
-  <link rel="stylesheet" href="/css/style.css">
-  
+  <link rel="stylesheet" href="public/css/style.css">
 </head>
 <body>
-  <img src="/IMG/LOGO P.png" alt="LOGO" width="150">
+  <img src="public/IMG/LOGO P.png" alt="LOGO" width="150">
 
   <h2>Registro de Usuario</h2>
   <div class="container">
-    <form id="registerForm">
-      <label for="firstName">Nombres:</label>
-      <input type="text" id="firstName" name="firstName" required>
+    <form id="registerForm" action="http://localhost:3000/registro" method="post">
 
-      <label for="lastName">Apellidos:</label>
-      <input type="text" id="lastName" name="lastName" required>
+      <label for="nombre">Nombre Completo:</label>
+      <input type="text" id="nombre" name="nombre" required>
+
+      <label for="direccion">Dirección:</label>
+      <input type="text" id="direccion" name="direccion">
 
       <label for="email">Email:</label>
       <input type="email" id="email" name="email" required>
 
-      <label for="phoneNumber">Número de Teléfono:</label>
-      <input type="tel" id="phoneNumber" name="phoneNumber" required>
+      <label for="documento">Documento:</label>
+      <input type="text" id="documento" name="documento" required>
 
       <label for="username">Nombre de Usuario:</label>
       <input type="text" id="username" name="username" required>
@@ -37,10 +37,12 @@
         <option value="tecnico">Técnico</option>
       </select>
 
-      <button type="button" onclick="register()">Registrar</button>
-      <script src="scripts.js" defer></script>
+      <button type="submit">Registrar</button>
+      <p>¿Ya tienes una cuenta? <a href="http://localhost:3000/login">Inicia sesión aquí</a>.</p>
+    
+    
     </form>
   </div>
+  <script src="/public/scripts.js"></script>
 </body>
 </html>
-
