@@ -8,7 +8,7 @@ async function login() {
     if (exists) {
       alert("Inicio de sesión exitoso");
       // Puedes redirigir a la página de registro de empresa
-      window.location.href = "registroDeEmpresa.html";
+      window.location.href = "registroDeEmpresa";
     } else {
       alert("Nombre de usuario o contraseña incorrectos");
     }

@@ -7,6 +7,10 @@ const path = require('path');
 
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use(express.json());
+app.use('*.js', (req, res, next) => {
+  res.type('text/javascript');
+  next();
+});
 
 const db = mysql.createConnection({
   host: 'localhost',
@@ -87,6 +91,39 @@ async function checkUserExists(username) {
     });
   });
 }
+//registro de empresa
+app.post('/registrar-empresa', (req, res) => {
+  const { nombre, nit, telefono, email, direccion } = req.body;
+
+  if (!validateCompanyFields(nombre, nit, telefono, email, direccion)) {
+    return res.status(400).json({ error: 'Por favor, completa todos los campos correctamente.' });
+  }
+
+  // Verificar si la empresa ya está registrada
+  const query = 'SELECT COUNT(*) AS count FROM empresas WHERE nit = ?';
+  db.query(query, [nit], (err, result) => {
+    if (err) {
+      console.error('Error al verificar la existencia de la empresa:', err);
+      return res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+
+    if (result[0].count > 0) {
+      return res.status(400).json({ error: 'La empresa ya está registrada.' });
+    }
+
+    // Insertar la empresa en la base de datos
+    const insertQuery = 'INSERT INTO empresas (nombre, nit, telefono, email, direccion) VALUES (?, ?, ?, ?, ?)';
+    db.query(insertQuery, [nombre, nit, telefono, email, direccion], (insertErr, insertResult) => {
+      if (insertErr) {
+        console.error('Error al insertar la empresa:', insertErr);
+        return res.status(500).json({ error: 'Error interno del servidor.' });
+      }
+
+      console.log('Registro de empresa exitoso:', insertResult);
+      return res.status(200).json({ continuar: true });
+    });
+  });
+});
 
 //RUTAS DE ENLACE //
 app.get('/', (req, res) => {
@@ -100,6 +137,7 @@ app.get('/login', (req, res) => {
 app.get('/registroDeEmpresa', (req, res) => {
   res.sendFile(__dirname + '/registroDeEmpresa.html');
 });
+
 // Iniciar el servidor
 app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
@@ -121,7 +159,9 @@ async function checkUserExists(nombre_completo) {
     });
   });
 }
-
+function validateCompanyFields(nombre, nit, telefono, email, direccion) {
+  return nombre !== '' && nit !== '' && telefono !== '' && email !== '' && direccion !== '';
+}
 function validateFields(nombre, email, documento, rol) {
   return nombre !== '' && email !== '' && documento !== '' && rol !== '';
 }
