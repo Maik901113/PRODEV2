@@ -58,6 +58,37 @@ app.post('/registro', async (req, res) => {
   });
 });
 
+app.post('/login', async (req, res) => {
+  const { username } = req.body;
+
+  try {
+    const userExists = await checkUserExists(username);
+
+    res.status(200).json({ exists: userExists });
+  } catch (error) {
+    console.error('Error al verificar la existencia del usuario:', error);
+    res.status(500).json({ error: 'Error interno del servidor.' });
+  }
+});
+
+// Función para verificar si un usuario ya existe en la base de datos
+async function checkUserExists(username) {
+  return new Promise((resolve, reject) => {
+    // Consulta SQL para verificar la existencia del usuario
+    const query = 'SELECT COUNT(*) AS count FROM usuarios WHERE username = ?';
+    db.query(query, [username], (err, result) => {
+      if (err) {
+        console.error('Error al verificar la existencia del usuario:', err);
+        reject(err);
+      } else {
+        // El resultado es un array de objetos, y result[0].count contiene el número de coincidencias
+        resolve(result[0].count > 0);
+      }
+    });
+  });
+}
+
+//RUTAS DE ENLACE //
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/registro.html');
 });
@@ -66,6 +97,9 @@ app.get('/login', (req, res) => {
   res.sendFile(__dirname + '/login.html');
 });
 
+app.get('/registroDeEmpresa', (req, res) => {
+  res.sendFile(__dirname + '/registroDeEmpresa.html');
+});
 // Iniciar el servidor
 app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
