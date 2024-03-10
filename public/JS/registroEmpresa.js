@@ -8,20 +8,27 @@ async function registerCompany() {
     const email = document.getElementById('emailEmpresa').value;
     const direccion = document.getElementById('direccionEmpresa').value;
   
+    // Registro de evento para el formulario
+  document.getElementById('registroEmpresaForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    registerCompany();
+  });
+  
+
     // Validaciones y lógica de registro aquí...
   
-    try {
-      const response = await fetch('http://localhost:3000/registrar-empresa', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          nombre,
-          nit,
-          telefono,
-          email,
-          direccion,
+   try {
+  const response = await fetch('http://localhost:3000/registrar-empresa', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      nombre,
+      nit,
+      telefono,
+      email,
+      direccion,
         }),
       });
   
@@ -30,7 +37,7 @@ async function registerCompany() {
         if (result.continuar) {
           alert('Registro de empresa exitoso');
           // Redirige a la página de registroDeMaquina.html
-          window.location.href = 'http://localhost:3000/registroDeMaquina.html';
+          window.location.href = 'http://localhost:3000/registro_de_maquina.html';
         } else {
           alert('Error en el registro de empresa. Por favor, inténtalo nuevamente.');
         }
@@ -46,11 +53,6 @@ async function registerCompany() {
   
   // Otras funciones y lógica necesaria...
   
-  // Registro de evento para el formulario
-  document.getElementById('registroEmpresaForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    registerCompany();
-  });
   
   // Función para continuar con el diagnóstico
   function continuarDiagnostico() {

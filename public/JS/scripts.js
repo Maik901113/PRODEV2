@@ -1,7 +1,9 @@
+// Función para validar campos
 function validateFields(nombre, email, documento, rol) {
   return nombre !== '' && email !== '' && documento !== '' && rol !== '';
 }
 
+// Función para verificar si el usuario ya existe
 async function userExists(username) {
   try {
     const response = await fetch(`/user-exists?username=${username}`);
@@ -13,10 +15,19 @@ async function userExists(username) {
   }
 }
 
+// EventListener para el formulario de registro
 document.getElementById('registerForm').addEventListener('submit', function (event) {
   event.preventDefault();
   register();
 });
+
+// Función para mostrar mensajes en el contenedor
+function showMessage(message, isSuccess) {
+  const messageContainer = document.getElementById('messageContainer');
+  messageContainer.innerHTML = message;
+  messageContainer.style.color = isSuccess ? 'green' : 'red';
+}
+
 // Función para registrar un usuario
 async function register() {
   const nombre = document.getElementById('nombre').value;
@@ -26,8 +37,6 @@ async function register() {
   const rol = document.getElementById('rol').value;
   const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
-
-  
 
   console.log('Valores a enviar al servidor:', {
     nombre,
@@ -39,30 +48,28 @@ async function register() {
     password,
   });
 
-
   if (!validateFields(nombre, email, documento, rol)) {
-    alert('Por favor, completa todos los campos correctamente.');
+    showMessage('Por favor, completa todos los campos correctamente.', false);
     return;
   }
 
-  const exists = await userExists(nombre);
+  const exists = await userExists(username);
 
   if (exists) {
-    alert('El usuario ya está registrado.');
+    showMessage('El usuario ya está registrado.', false);
     return;
   }
+
+  try {
     // Obtener el id_Roles del rol proporcionado
-  let idRoles;
+    let idRoles;
     if (rol === 'administrador') {
       idRoles = 1; // Reemplaza con el valor correspondiente para "administrador"
     } else {
       // Si es otro rol, ajusta el valor en consecuencia
       idRoles = 2; // Reemplaza con el valor correspondiente para otros roles
-  }
-  
-  
+    }
 
-  try {
     const response = await fetch('http://localhost:3000/registro', {
       method: 'POST',
       headers: {
@@ -73,7 +80,7 @@ async function register() {
         direccion,
         email,
         documento,
-        rol:idRoles,
+        rol: idRoles, // Usa el idRoles calculado
         username,
         password,
       }),
@@ -81,21 +88,19 @@ async function register() {
 
     if (response.ok) {
       const result = await response.json();
-      alert(result.success);
-
-
-      // Redirige al usuario a la página de inicio de sesión después de un registro exitoso
-      window.location.href = 'http://localhost:3000/login';
+      if (result.success) {
+        showMessage(result.success, true);
+        window.location.href = 'http://localhost:3000/login';
+      } else {
+        showMessage(result.error, false);
+      }
     } else {
       const error = await response.json();
-      alert(error.error);
+      showMessage(error.error, false);
     }
-
     
   } catch (error) {
     console.error('Error al enviar solicitud:', error);
-    alert('Error al registrar usuario. Por favor, intenta nuevamente.');
+    showMessage('Error al registrar usuario. Por favor, intenta nuevamente.', false);
   }
-  
 }
-

@@ -1,98 +1,33 @@
 const express = require('express');
-const mysql = require('mysql');
 const cors = require('cors');
 const app = express();
 const port = 3000;
 const path = require('path');
+const db = require('./db');
 
+// Middleware para servir archivos estáticos desde la carpeta 'public'
 app.use('/public', express.static(path.join(__dirname, 'public')));
+
+// Middleware para procesar datos en formato JSON
 app.use(express.json());
+
+// Middleware para establecer el tipo de contenido para archivos JavaScript
 app.use('*.js', (req, res, next) => {
   res.type('text/javascript');
   next();
 });
 
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'pro_dev_final',
-});
-
-// Conectar a la base de datos
-db.connect((err) => {
-  if (err) {
-    console.error('Error de conexión a la base de datos:', err);
-  } else {
-    console.log('Conectado a la base de datos');
-  }
-});
-
+// Middleware CORS para permitir solicitudes desde cualquier origen
 app.use(cors());
 
-app.post('/registro', async (req, res) => {
-  const { nombre, direccion, email, documento, rol, username, password } = req.body;
+// Rutas de registro y login
+const userController = require('./controllers/userController');
+app.post('/registro', userController.registrarUsuario);
+app.post('/login', userController.loginUsuario);
 
-  console.log('Valores recibidos en el servidor:', { nombre, direccion, email, documento, rol });
-  
-
-  if (!validateFields(nombre, email, documento, rol)) {
-    console.log('Campos no válidos. Abortando registro.');
-    return res.status(400).json({ error: 'Por favor, completa todos los campos correctamente.' });
-  }
-
-  // Verificar si el usuario ya existe en la base de datos
-  const userExists = await checkUserExists(nombre);
-
-  if (userExists) {
-    return res.status(400).json({ error: 'El usuario ya está registrado.' });
-  }
-
-  const query = 'INSERT INTO usuarios (nombre_completo, direccion, email, documento, id_roles, username, password) VALUES (?, ?, ?, ?, ?, ?, ?)';
-  const values = [nombre, direccion , email, documento, rol, username, password];
-
-  db.query(query, values, (err, result) => {
-    if (err) {
-      console.error('Error al insertar usuario:', err);
-      return res.status(500).json({ error: 'Error interno del servidor.' });
-    }
-    console.log('Registro exitoso:', result);
-
-    return res.status(200).json({ success: 'Usuario registrado exitosamente.' });
-  });
-});
-
-app.post('/login', async (req, res) => {
-  const { username } = req.body;
-
-  try {
-    const userExists = await checkUserExists(username);
-
-    res.status(200).json({ exists: userExists });
-  } catch (error) {
-    console.error('Error al verificar la existencia del usuario:', error);
-    res.status(500).json({ error: 'Error interno del servidor.' });
-  }
-});
-
-// Función para verificar si un usuario ya existe en la base de datos
-async function checkUserExists(username) {
-  return new Promise((resolve, reject) => {
-    // Consulta SQL para verificar la existencia del usuario
-    const query = 'SELECT COUNT(*) AS count FROM usuarios WHERE username = ?';
-    db.query(query, [username], (err, result) => {
-      if (err) {
-        console.error('Error al verificar la existencia del usuario:', err);
-        reject(err);
-      } else {
-        // El resultado es un array de objetos, y result[0].count contiene el número de coincidencias
-        resolve(result[0].count > 0);
-      }
-    });
-  });
-}
-//registro de empresa
+// Registro de empresa
 app.post('/registrar-empresa', (req, res) => {
+  console.log('Solicitud recibida en /registrar-empresa:', req.body);
   const { nombre, nit, telefono, email, direccion } = req.body;
 
   if (!validateCompanyFields(nombre, nit, telefono, email, direccion)) {
@@ -100,7 +35,7 @@ app.post('/registrar-empresa', (req, res) => {
   }
 
   // Verificar si la empresa ya está registrada
-  const query = 'SELECT COUNT(*) AS count FROM empresas WHERE nit = ?';
+  const query = 'SELECT COUNT(*) AS count FROM empresa WHERE nit = ?';
   db.query(query, [nit], (err, result) => {
     if (err) {
       console.error('Error al verificar la existencia de la empresa:', err);
@@ -112,7 +47,7 @@ app.post('/registrar-empresa', (req, res) => {
     }
 
     // Insertar la empresa en la base de datos
-    const insertQuery = 'INSERT INTO empresas (nombre, nit, telefono, email, direccion) VALUES (?, ?, ?, ?, ?)';
+    const insertQuery = 'INSERT INTO empresa (nombre_completo, nit, telefono, email, direccion) VALUES (?, ?, ?, ?, ?)';
     db.query(insertQuery, [nombre, nit, telefono, email, direccion], (insertErr, insertResult) => {
       if (insertErr) {
         console.error('Error al insertar la empresa:', insertErr);
@@ -120,12 +55,12 @@ app.post('/registrar-empresa', (req, res) => {
       }
 
       console.log('Registro de empresa exitoso:', insertResult);
-      return res.status(200).json({ continuar: true });
+      return res.status(200).json({ success: 'Registro de empresa exitoso.' });
     });
   });
 });
 
-//RUTAS DE ENLACE //
+// Rutas de enlace...
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/registro.html');
 });
@@ -138,30 +73,23 @@ app.get('/registroDeEmpresa', (req, res) => {
   res.sendFile(__dirname + '/registroDeEmpresa.html');
 });
 
+// Middleware para manejar errores 404 (Not Found)
+app.use((req, res, next) => {
+  res.status(404).json({ error: 'Ruta no encontrada' });
+});
+
+// Middleware para manejar errores globales
+app.use((err, req, res, next) => {
+  console.error('Error global:', err);
+  res.status(500).json({ error: 'Error interno del servidor' });
+});
+
 // Iniciar el servidor
 app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
 });
 
-// Función para verificar si un usuario ya existe en la base de datos
-async function checkUserExists(nombre_completo) {
-  return new Promise((resolve, reject) => {
-    // Consulta SQL para verificar la existencia del usuario
-    const query = 'SELECT COUNT(*) AS count FROM usuarios WHERE nombre_completo = ?';
-    db.query(query, [nombre_completo], (err, result) => {
-      if (err) {
-        console.error('Error al verificar la existencia del usuario:', err);
-        reject(err);
-      } else {
-        // El resultado es un array de objetos, y result[0].count contiene el número de coincidencias
-        resolve(result[0].count > 0);
-      }
-    });
-  });
-}
+// Función para validar campos de empresa
 function validateCompanyFields(nombre, nit, telefono, email, direccion) {
   return nombre !== '' && nit !== '' && telefono !== '' && email !== '' && direccion !== '';
-}
-function validateFields(nombre, email, documento, rol) {
-  return nombre !== '' && email !== '' && documento !== '' && rol !== '';
 }
