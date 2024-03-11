@@ -1,8 +1,11 @@
 const express = require('express');
 const cors = require('cors');
+const axios = require('axios');
 const app = express();
 const bodyParser = require('body-parser');
 const empresasRoutes = require('./routes/empresaRoutes'); // Ajusta la ruta según tu estructura de archivos
+const diagnosticoRoutes = require('./routes/diagnosticoRoutes');
+
 const port = 3000;
 const path = require('path');
 const db = require('./db');
@@ -32,7 +35,8 @@ const empresaController = require('./controllers/empresaController'); // Importa
 app.post('/registrar-empresa', empresaController.registrarEmpresa); // Usar el controlador de empresas
 app.use(bodyParser.json());
 app.use('/empresas', empresasRoutes);   
-
+//diagnostico
+app.use('/diagnostico', diagnosticoRoutes);
 
 
 // Rutas de enlace...
@@ -86,6 +90,9 @@ app.use((err, req, res, next) => {
   console.error('Error global:', err);
   res.status(500).json({ error: 'Error interno del servidor' });
 });
+
+
+
 
 // Iniciar el servidor
 app.listen(port, () => {

@@ -30,7 +30,7 @@ async function registerCompany() {
       if (result.success) {
         alert('Registro de empresa exitoso');
         // Redirige a la página de registro_de_maquina.html después del registro exitoso
-        window.location.href = 'http://localhost:3000/registro_de_maquina.html';
+        window.location.href = 'http://localhost:3000/registro_de_maquina';
       } else {
         alert('Error en el registro de empresa. Por favor, inténtalo nuevamente.');
       }
@@ -51,6 +51,6 @@ async function registerCompany() {
     // Lógica para continuar con el diagnóstico...
     alert('Continuar con diagnóstico');
     // Redirige a la página de diagnostico.html
-    window.location.href = 'http://localhost:3000/diagnostico.html';
+    window.location.href = 'http://localhost:3000/diagnostico';
   }
   

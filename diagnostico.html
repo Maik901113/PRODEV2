@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./public/css/style.css">
   
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
   <title>Diagnóstico Inicial</title>
   </head>
 <body>
@@ -14,15 +16,16 @@
   <h2>Diagnóstico Inicial</h2>
     <div class="container">
 
+      
         <form id="diagnosticoForm">
-            <label for="diagnostico">Diagnóstico:</label>
-            <textarea id="diagnostico" name="diagnostico" rows="4" required></textarea>
-            <button type="button" onclick="rechazar()">Rechazar</button>
-            <button type="button" onclick="aprobar()" >Aprobar</button>
-        
+          <label for="diagnostico">Diagnóstico:</label>
+          <textarea id="diagnostico" name="diagnostico" rows="4" required></textarea>
+          <button type="button" onclick="rechazar()">Rechazar</button>
+          <button type="button" onclick="aprobar()">Aprobar</button>
         </form>
+      
     </div>    
 
-  <script src="public/JS/js.js"></script>
+  <script src="public/JS/diagnostico.js"></script>
 </body>
 </html>
