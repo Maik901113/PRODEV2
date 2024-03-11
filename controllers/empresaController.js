@@ -1,7 +1,28 @@
 const db = require('../db');
 
+function validateCompanyFields(nombre, nit, telefono, email, direccion) {
+    // Verifica que todos los campos tengan algún valor
+    if (!nombre || !nit || !telefono || !email || !direccion) {
+      return false;
+    }
+  
+    // Puedes agregar lógica de validación adicional aquí según tus requisitos
+    // Por ejemplo, verificar el formato del correo electrónico, longitud de los campos, etc.
+  
+    // Ejemplo adicional: Verificar el formato de correo electrónico
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return false;
+    }
+  
+    // Agrega más validaciones según sea necesario
+  
+    // Si pasa todas las validaciones, devuelve true
+    return true;
+  }
+
+
 exports.registrarEmpresa = (req, res) => {
-  console.log('Solicitud recibida en /registrar-empresa:', req.body);
   const { nombre, nit, telefono, email, direccion } = req.body;
 
   if (!validateCompanyFields(nombre, nit, telefono, email, direccion)) {
@@ -22,25 +43,14 @@ exports.registrarEmpresa = (req, res) => {
 
     // Insertar la empresa en la base de datos
     const insertQuery = 'INSERT INTO empresa (nombre_completo, nit, telefono, email, direccion) VALUES (?, ?, ?, ?, ?)';
-    const insertValues = [nombre, nit, telefono, email, direccion];
-
-    db.query(insertQuery, insertValues, (insertErr, insertResult) => {
+    db.query(insertQuery, [nombre, nit, telefono, email, direccion], (insertErr, insertResult) => {
       if (insertErr) {
         console.error('Error al insertar la empresa:', insertErr);
         return res.status(500).json({ error: 'Error interno del servidor.' });
       }
 
       console.log('Registro de empresa exitoso:', insertResult);
-      return res.status(200).json({ continuar: true });
+      return res.status(200).json({ success: 'Registro de empresa exitoso.' });
     });
   });
 };
-
-function validateCompanyFields(nombre, nit, telefono, email, direccion) {
-  return nombre !== '' && nit !== '' && telefono !== '' && email !== '' && direccion !== '';
-}
-
-function validateFields(nombre, email, documento, rol) {
-  return nombre !== '' && email !== '' && documento !== '' && rol !== '';
-}
-    

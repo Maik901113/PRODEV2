@@ -26,39 +26,9 @@ app.post('/registro', userController.registrarUsuario);
 app.post('/login', userController.loginUsuario);
 
 // Registro de empresa
-app.post('/registrar-empresa', (req, res) => {
-  console.log('Solicitud recibida en /registrar-empresa:', req.body);
-  const { nombre, nit, telefono, email, direccion } = req.body;
+const empresaController = require('./controllers/empresaController'); // Importar el controlador
+app.post('/registrar-empresa', empresaController.registrarEmpresa); // Usar el controlador de empresas
 
-  if (!validateCompanyFields(nombre, nit, telefono, email, direccion)) {
-    return res.status(400).json({ error: 'Por favor, completa todos los campos correctamente.' });
-  }
-
-  // Verificar si la empresa ya está registrada
-  const query = 'SELECT COUNT(*) AS count FROM empresa WHERE nit = ?';
-  db.query(query, [nit], (err, result) => {
-    if (err) {
-      console.error('Error al verificar la existencia de la empresa:', err);
-      return res.status(500).json({ error: 'Error interno del servidor.' });
-    }
-
-    if (result[0].count > 0) {
-      return res.status(400).json({ error: 'La empresa ya está registrada.' });
-    }
-
-    // Insertar la empresa en la base de datos
-    const insertQuery = 'INSERT INTO empresa (nombre_completo, nit, telefono, email, direccion) VALUES (?, ?, ?, ?, ?)';
-    db.query(insertQuery, [nombre, nit, telefono, email, direccion], (insertErr, insertResult) => {
-      if (insertErr) {
-        console.error('Error al insertar la empresa:', insertErr);
-        return res.status(500).json({ error: 'Error interno del servidor.' });
-      }
-
-      console.log('Registro de empresa exitoso:', insertResult);
-      return res.status(200).json({ success: 'Registro de empresa exitoso.' });
-    });
-  });
-});
 
 // Rutas de enlace...
 app.get('/', (req, res) => {
@@ -89,7 +59,3 @@ app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
 });
 
-// Función para validar campos de empresa
-function validateCompanyFields(nombre, nit, telefono, email, direccion) {
-  return nombre !== '' && nit !== '' && telefono !== '' && email !== '' && direccion !== '';
-}
