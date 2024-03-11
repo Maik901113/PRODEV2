@@ -25,7 +25,7 @@ const userController = require('./controllers/userController');
 app.post('/registro', userController.registrarUsuario);
 app.post('/login', userController.loginUsuario);
 
-// Registro de empresa
+// Registro de empresa yregistr de maquina
 const empresaController = require('./controllers/empresaController'); // Importar el controlador
 app.post('/registrar-empresa', empresaController.registrarEmpresa); // Usar el controlador de empresas
 
@@ -42,6 +42,34 @@ app.get('/login', (req, res) => {
 app.get('/registroDeEmpresa', (req, res) => {
   res.sendFile(__dirname + '/registroDeEmpresa.html');
 });
+
+app.get('/registro_de_maquina', (req, res) => {
+    res.sendFile(__dirname + '/registro_de_maquina.html');
+});
+app.get('/diagnostico', (req, res) => {
+    res.sendFile(__dirname + '/diagnostico.html');
+});
+ 
+app.get('/finalizacion', (req, res) => {
+    res.sendFile(__dirname + '/finalizacion.html');
+});
+app.get('/generacion_ticket', (req, res) => {
+    res.sendFile(__dirname + '/generacion_ticket.html');
+});
+app.get('/cerrar_ticket', (req, res) => {
+    res.sendFile(__dirname + '/cerrar_ticket.html');
+});
+app.get('/historial_maquina', (req, res) => {
+    res.sendFile(__dirname + '/historial_maquina.html');
+});
+app.get('/insumos_repuestos', (req, res) => {
+    res.sendFile(__dirname + '/insumos_repuestos.html');
+});
+app.get('/mantenimiento', (req, res) => {
+    res.sendFile(__dirname + '/mantenimiento.html');
+});
+
+
 
 // Middleware para manejar errores 404 (Not Found)
 app.use((req, res, next) => {
