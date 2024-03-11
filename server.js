@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const bodyParser = require('body-parser');
+const empresasRoutes = require('./routes/empresaRoutes'); // Ajusta la ruta según tu estructura de archivos
 const port = 3000;
 const path = require('path');
 const db = require('./db');
@@ -28,6 +30,9 @@ app.post('/login', userController.loginUsuario);
 // Registro de empresa yregistr de maquina
 const empresaController = require('./controllers/empresaController'); // Importar el controlador
 app.post('/registrar-empresa', empresaController.registrarEmpresa); // Usar el controlador de empresas
+app.use(bodyParser.json());
+app.use('/empresas', empresasRoutes);   
+
 
 
 // Rutas de enlace...

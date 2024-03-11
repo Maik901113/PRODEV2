@@ -54,3 +54,99 @@ exports.registrarEmpresa = (req, res) => {
     });
   });
 };
+
+//registro de mantenimiento e ingreso
+function validateMaintenanceFields(nombreMaquina, marca, serial, tipoMaquina, descripcion, fechaIngreso, tipoMantenimiento) {
+    // Implementa lógica de validación según tus necesidades
+    return nombreMaquina && marca && serial && tipoMaquina && descripcion && fechaIngreso && tipoMantenimiento;
+  }
+  
+  exports.registrarMaquina = (req, res) => {
+    const { nombreMaquina, marca, serial, tipoMaquina, descripcion, fechaIngreso, tipoMantenimiento } = req.body;
+  
+    // Validar campos (puedes utilizar la función validateCompanyFields aquí si es necesario)
+    if (!validateMaintenanceFields(nombreMaquina, marca, serial, tipoMaquina, descripcion, fechaIngreso, tipoMantenimiento)) {
+      return res.status(400).json({ error: 'Por favor, completa todos los campos correctamente.' });
+    }
+  
+    const tipoMantenimientoQuery = 'INSERT IGNORE INTO mantenimiento (nombre_tipo_mantenimiento) VALUES (?)';
+    db.query(tipoMantenimientoQuery, [tipoMantenimiento], (tipoMantenimientoErr, tipoMantenimientoResult) => {
+      if (tipoMantenimientoErr) {
+        console.error('Error al insertar tipo de mantenimiento:', tipoMantenimientoErr);
+        return res.status(500).json({ error: 'Error interno del servidor.' });
+      }
+  
+      // Obtener el ID del tipo de mantenimiento
+      const obtenerTipoMantenimientoQuery = 'SELECT id_mantenimiento FROM mantenimiento WHERE nombre_tipo_mantenimiento = ?';
+      db.query(obtenerTipoMantenimientoQuery, [tipoMantenimiento], (obtenerTipoMantenimientoErr, obtenerTipoMantenimientoResult) => {
+        if (obtenerTipoMantenimientoErr) {
+          console.error('Error al obtener tipo de mantenimiento:', obtenerTipoMantenimientoErr);
+          return res.status(500).json({ error: 'Error interno del servidor.' });
+        }
+  
+        const idTipoMantenimiento = obtenerTipoMantenimientoResult[0].id_mantenimiento;
+  
+        // Insertar datos de la máquina en la tabla de ingresos con el serial
+        const insertarMaquinaQuery = 'INSERT INTO ingresos (nombre_de_maquina, Marca_de_maquina, serial, descripcion, fecha_ingreso, id_mantenimiento) VALUES (?, ?, ?, ?, ?, ?)';
+        db.query(insertarMaquinaQuery, [nombreMaquina, marca, serial, descripcion, fechaIngreso, idTipoMantenimiento], (insertarMaquinaErr, insertarMaquinaResult) => {
+          if (insertarMaquinaErr) {
+            console.error('Error al insertar máquina:', insertarMaquinaErr);
+            return res.status(500).json({ error: 'Error interno del servidor.' });
+          }
+  
+          console.log('Registro de máquina exitoso:', insertarMaquinaResult);
+          return res.status(200).json({ success: 'Registro de máquina exitoso.' });
+        });
+      });
+    });
+  };
+  exports.registrarMantenimiento = (req, res) => {
+    const { nombreMaquina, marca, serial, tipoMaquina, descripcion, fechaIngreso, tipoMantenimiento } = req.body;
+  
+    // Validar campos (puedes utilizar la función validateCompanyFields aquí si es necesario)
+  
+    // Definir valores permitidos para tipoMantenimiento
+    const allowedMantenimientoValues = ['preventivo', 'correctivo'];
+
+  if (allowedMantenimientoValues.includes(tipoMantenimiento)) {
+    // Insertar tipo de mantenimiento si no existe
+    const tipoMantenimientoQuery = 'INSERT IGNORE INTO mantenimiento (nombre_tipo_mantenimiento) VALUES (?)';
+    db.query(tipoMantenimientoQuery, [tipoMantenimiento], (tipoMantenimientoErr, tipoMantenimientoResult) => {
+      if (tipoMantenimientoErr) {
+        console.error('Error al insertar tipo de mantenimiento:', tipoMantenimientoErr);
+        return res.status(500).json({ error: 'Error interno del servidor.' });
+      }
+
+      // Obtener el ID del tipo de mantenimiento (ya existe o acaba de ser creado)
+      const obtenerTipoMantenimientoQuery = 'SELECT id_mantenimiento FROM mantenimiento WHERE nombre_tipo_mantenimiento = ?';
+      db.query(obtenerTipoMantenimientoQuery, [tipoMantenimiento], (obtenerTipoMantenimientoErr, obtenerTipoMantenimientoResult) => {
+        if (obtenerTipoMantenimientoErr) {
+          console.error('Error al obtener tipo de mantenimiento:', obtenerTipoMantenimientoErr);
+          return res.status(500).json({ error: 'Error interno del servidor.' });
+        }
+
+        // Verificar que haya resultados
+        let idTipoMantenimiento;
+
+        if (obtenerTipoMantenimientoResult && obtenerTipoMantenimientoResult.length > 0) {
+          idTipoMantenimiento = obtenerTipoMantenimientoResult[0].id_mantenimiento;
+        }
+
+        // Insertar datos de la máquina en la tabla de ingresos con el serial como id_ingreso
+        const insertarMaquinaQuery = 'INSERT INTO ingresos (id_ingreso, nombre_de_maquina, Marca_de_maquina, descripcion, fecha_ingreso, id_mantenimiento) VALUES (?, ?, ?, ?, ?, ?)';
+        db.query(insertarMaquinaQuery, [serial, nombreMaquina, marca, descripcion, fechaIngreso, idTipoMantenimiento], (insertarMaquinaErr, insertarMaquinaResult) => {
+          if (insertarMaquinaErr) {
+            console.error('Error al insertar máquina:', insertarMaquinaErr);
+            return res.status(500).json({ error: 'Error interno del servidor.' });
+          }
+
+          console.log('Registro de máquina exitoso:', insertarMaquinaResult);
+          return res.status(200).json({ success: 'Registro de máquina exitoso.' });
+        });
+      });
+    });
+  } else {
+    console.log('Valor de tipoMantenimiento no permitido:', tipoMantenimiento);
+    return res.status(400).json({ error: 'Valor de tipoMantenimiento no permitido.' });
+  }
+};
