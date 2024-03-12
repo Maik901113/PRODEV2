@@ -1,28 +1,26 @@
 // diagnosticoController.js
-const axios = require('axios');
 const db = require('../db');
 
-exports.registrarDiagnostico = async (req, res) => {
-  try {
-    const { diagnostico, id_ticket, id_salida } = req.body;
+exports.registrarDiagnostico = (req, res) => {
+  const { diagnostico } = req.body;
 
-    // Validar campos
-    if (!diagnostico || !id_ticket || !id_salida) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+  // Validar que se proporcionó el diagnóstico
+  if (!diagnostico) {
+    return res.status(400).json({ error: 'El campo de diagnóstico es obligatorio.' });
+  }
+
+  // Aquí puedes realizar validaciones adicionales si es necesario
+
+  // Insertar datos del diagnóstico en la tabla diagnostico
+  const insertarDiagnosticoQuery = 'INSERT INTO diagnostico (descripcion_diagnostico) VALUES (?)';
+  db.query(insertarDiagnosticoQuery, [diagnostico], (insertarDiagnosticoErr, insertarDiagnosticoResult) => {
+    if (insertarDiagnosticoErr) {
+      console.error('Error al insertar diagnóstico:', insertarDiagnosticoErr);
+      return res.status(500).json({ error: 'Error interno del servidor.' });
     }
 
-    // Realizar la petición al servidor usando Axios
-    const response = await axios.post('http://localhost:3000/diagnostico/registrar-diagnostico', {
-      diagnostico,
-      id_ticket,
-      id_salida,
-    });
-
-    // Manejar la respuesta del servidor
-    console.log('Respuesta del servidor:', response.data);
-    return res.status(200).json({ success: 'Registro de diagnóstico exitoso.' });
-  } catch (error) {
-    console.error('Error al enviar diagnóstico:', error.message);
-    return res.status(500).json({ error: 'Error interno del servidor.' });
-  }
+    console.log('Registro de diagnóstico exitoso:', insertarDiagnosticoResult);
+    return res.status(200).json({ success: 'Diagnóstico registrado exitosamente.' });
+  });
 };
+

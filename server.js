@@ -36,7 +36,8 @@ app.post('/registrar-empresa', empresaController.registrarEmpresa); // Usar el c
 app.use(bodyParser.json());
 app.use('/empresas', empresasRoutes);   
 //diagnostico
-app.use('/diagnostico', diagnosticoRoutes);
+app.use(bodyParser.json());
+app.use('/diagnostico', diagnosticoRoutes)
 
 
 // Rutas de enlace...
