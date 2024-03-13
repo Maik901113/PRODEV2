@@ -1,0 +1,41 @@
+<!-- formulario.ejs -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/public/css/style.css"> <!-- Ajusta la ruta según tu estructura de archivos -->
+  <title>GenerarTicket</title>
+</head>
+<body>
+  <img src="/public/IMG/LOGO P.png" alt="LOGO" width="150">
+
+  <h2>Generación de Ticket</h2>
+  <div class="container">
+    <form id="ticketForm" action="/api/generarTicket" method="POST">
+
+        <label for="serialMaquina">Serial de la Máquina:</label>
+        <input type="text" id="serialMaquina" name="serialMaquina" value="<%= serialMaquina %>" readonly>
+
+        <!-- Resto de tu formulario -->
+        <label for="documentoTecnico">Número de Documento del Técnico:</label>
+        <input type="text" id="documentoTecnico" name="documentoTecnico" value="<%= documento %>" readonly>
+
+        <label for="numeroTicket">Número de Ticket:</label>
+        <input type="text" id="numeroTicket" name="numeroTicket" value="<%= numeroTicket %>" readonly>
+
+        <button type="submit">Generar Ticket</button>
+        <button type="button" id="continuarButton" onclick="continuar()">Continuar</button>
+        <!-- Agregar un elemento para mostrar mensajes de error en tu formulario -->
+        <div id="errorMessage" style="color: red;"></div>
+    </form>
+    <script src="/public/JS/generarTicket.js"></script> <!-- Ajusta la ruta según tu estructura de archivos -->
+  </div>
+  <script>
+    // Función para redirigir a /mantenimiento
+    function continuar() {
+      window.location.href = '/mantenimiento';
+    }
+  </script>
+</body>
+</html>

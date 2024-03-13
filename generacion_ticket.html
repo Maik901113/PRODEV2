@@ -12,21 +12,24 @@
   <h2>Generación de Ticket</h2>
   <div class="container">
     <form id="ticketForm">
+
         <label for="serialMaquina">Serial de la Máquina:</label>
-        <input type="text" id="serialMaquina" name="serialMaquina" required>
+        <input type="text" id="serialMaquina" name="serialMaquina" readonly>
 
         <label for="codigoTecnico">Código de Técnico (4 dígitos):</label>
         <input type="number" id="codigoTecnico" name="codigoTecnico" min="0001" max="9999" required>
 
         <label for="numeroTicket">Número de Ticket (10 dígitos):</label>
         <input type="text" id="numeroTicket" name="numeroTicket" readonly>
-        
-        <button type="button" onclick="generarTicket()">Generar Ticket</button>
-        <button type="button" onclick="continuarAMantenimiento()">Continuar</button>
 
+        <button type="button" id="generarTicketButton">Generar Ticket</button>
+        <button type="button" id="continuarButton">Continuar</button>
+        <!-- Agregar un elemento para mostrar mensajes de error en tu formulario -->
+        <div id="errorMessage" style="color: red;"></div>
     </form>
 
-    <script src="public/JS/js.js"></script>
+   <script src="public/JS/generarTicket.js"></script>
   </div>
 </body>
 </html>
+
